@@ -4,6 +4,7 @@
 #include <iostream>
 #include <time.h>
 #include <math.h>
+#include <assert.h>
 #include "Matrix.h"
 
 Matrix::Matrix(int n_rows, int n_columns, std::string init) {
@@ -70,6 +71,12 @@ Matrix::Matrix(double** matrix, int n_rows, int n_columns):
 double** Matrix::get_matrix() {
 	return this->matrix;
 }
+
+double* Matrix::operator[](int i) {
+	assert(i < n_rows);
+	return matrix[i];
+}
+
 
 int Matrix::get_size(int axis) {
 	if (axis == 0)
