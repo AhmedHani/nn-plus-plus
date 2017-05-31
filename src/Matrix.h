@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <vector>
+#include <string>
 
 class Matrix {
 public:
@@ -9,6 +10,7 @@ public:
 	~Matrix();
 	Matrix(double** matrix, int n_rows, int n_columns);
 	double** get_matrix();
+	double* operator[](int i);
 	int get_size(int axis);
 	void set_value(int i, int j, double value);
 	double get_value(int i, int j);
