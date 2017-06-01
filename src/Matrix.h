@@ -15,7 +15,7 @@ public:
 	void set_value(int i, int j, double value);
 	double get_value(int i, int j);
 	Matrix* transpose();
-	double** scale(double factor);
+	Matrix* scale(double factor);
 	std::vector<std::vector<double>> to_vector();
 
 private:

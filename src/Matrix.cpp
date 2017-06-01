@@ -77,7 +77,6 @@ double* Matrix::operator[](int i) {
 	return matrix[i];
 }
 
-
 int Matrix::get_size(int axis) {
 	if (axis == 0)
 		return this->n_rows;
@@ -111,7 +110,7 @@ Matrix* Matrix::transpose() {
 	return new Matrix(transposed_matrix, this->n_columns, this->n_rows);
 }
 
-double** Matrix::scale(double factor) {
+Matrix* Matrix::scale(double factor) {
 	double** modified_matrix = new double*[this->n_rows];
 
 	for (size_t i = 0; i < this->n_rows; i++) {
@@ -124,7 +123,7 @@ double** Matrix::scale(double factor) {
 		}
 	}
 
-	return modified_matrix;
+	return new Matrix(modified_matrix, this->n_rows, this->n_columns);
 }
 
 std::vector<std::vector<double>> Matrix::to_vector() {

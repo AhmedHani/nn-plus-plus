@@ -1,12 +1,15 @@
 #include "LogisticRegression.h"
 #include "Activation.h"
 #include "Operation.h"
+#include "Log.h"
+#include <iostream>
+#include <iomanip> 
+#include <cmath>
 
 LogisticRegression::LogisticRegression(double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type):
 	n_features(n_features), batch_size(batch_size), learning_rate(learning_rate), momentum(momentum), loss_type(loss_type) {
 		this->weights = new Matrix(this->n_features, 1, "normal");
 		this->bias = new Matrix(this->batch_size, 1, "ones");
-		
 }
 
 LogisticRegression::~LogisticRegression() {
@@ -20,6 +23,9 @@ void LogisticRegression::fit(Matrix* features, Matrix* labels) {
 	Matrix* activated_logit = Activation::sigmoid(logits);
 	Matrix* error = CostFunction::mean_squared_error(labels, activated_logit);
 	double error_sum = Operation::sum_squared(error);
+
+	Log::show(Operation::round(error_sum, 4), "Current Error");
+
 	Matrix* gradients = Operation::normalize(Operation::matmul(features->transpose(), error), (double)this->batch_size);
 
 	this->update(gradients);

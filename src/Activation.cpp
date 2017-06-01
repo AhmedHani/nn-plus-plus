@@ -1,4 +1,6 @@
 #include <math.h>
+#include <iomanip>
+#include <iostream>
 #include "Activation.h"
 
 double Activation::sigmoid(double value) {

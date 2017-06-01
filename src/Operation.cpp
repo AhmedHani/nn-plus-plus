@@ -40,7 +40,7 @@ Matrix* Operation::mul(Matrix* a, double value) {
 }
 
 Matrix* Operation::matmul(Matrix* a, Matrix* b) {
-	validate_matmul(a, b);
+	//validate_matmul(a, b);
 
 	Matrix* result = new Matrix(a->get_size(0), b->get_size(1), "zeros");
 
@@ -107,4 +107,47 @@ bool Operation::validate_matmul(Matrix* a, Matrix* b) {
 	}
 
 	return true;
+}
+
+double Operation::round(double value, int precision) {
+	std::string string_value = std::to_string(value);
+	std::string result = "";
+	bool after_point = false;
+	int count_after_point = 0;
+	int last_int = -1;
+
+	for (int i = 0; i < string_value.size(); i++) {
+		if (string_value[i] == '.') {
+			after_point = true;
+			result.push_back('.');
+
+			continue;
+		}
+
+		if (after_point)
+			count_after_point++;
+
+		if (count_after_point == precision) {
+			char current = string_value[i];
+			last_int = atoi(&current);
+
+			continue;
+		}
+
+		if (count_after_point == precision + 1) {
+			int current = atoi(&string_value[i]);
+
+			if (current >= 5) {
+				last_int++;
+			}
+
+			break;
+		}
+
+		result.push_back(string_value[i]);
+	}
+
+	result.push_back(std::to_string(last_int).c_str()[0]);
+
+	return atof(result.c_str());
 }

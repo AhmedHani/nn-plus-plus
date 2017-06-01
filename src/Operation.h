@@ -13,6 +13,7 @@ public:
 	static Matrix* matdot(Matrix* a, Matrix* b);
 	static Matrix* normalize(Matrix* a, double value);
 	static double sum_squared(Matrix* a);
+	static double round(double value, int precision);
 
 private:
 	static bool validate_add_sub_dot(Matrix* a, Matrix* b);
