@@ -7,7 +7,14 @@
 
 class LogisticRegression {
 public:
-	LogisticRegression(double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type, std::string optimizer);
+	LogisticRegression(
+		double n_features, 
+		int batch_size, 
+		double learning_rate, 
+		double momentum, 
+		std::string loss_type, 
+		std::string optimizer);
+
 	~LogisticRegression();
 	void fit(Matrix* features, Matrix* labels);
 	Matrix* predict(Matrix* features);

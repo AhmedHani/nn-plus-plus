@@ -9,7 +9,8 @@
 #include <iostream> 
 #include <cmath>
 
-LogisticRegression::LogisticRegression(double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type, std::string optimizer):
+LogisticRegression::LogisticRegression(
+	double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type, std::string optimizer):
 	n_features(n_features), batch_size(batch_size), learning_rate(learning_rate), momentum(momentum), loss_type(loss_type), optimizer(optimizer) {
 		this->weights = new Matrix(this->n_features, 1, "normal");
 		this->bias = new Matrix(this->batch_size, 1, "ones");
