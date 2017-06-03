@@ -48,6 +48,7 @@ void LinearRegression::fit(Matrix* features, Matrix* labels) {
 	Log::show(Operation::round(error_sum, 4), "Current Error");
 
 	this->mini_batch_stochastic_gradient_descent->optimize(features, error, this->weights);
+	this->mini_batch_stochastic_gradient_descent->optimize(new Matrix(1, this->batch_size, "ones"), error, this->bias);
 }
 
 Matrix* LinearRegression::predict(Matrix* features) {
