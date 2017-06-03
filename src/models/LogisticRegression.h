@@ -3,10 +3,11 @@
 
 #include "Matrix.h"
 #include "CostFunction.h"
+#include "MiniBatchStochasticGradientDescent.h"
 
 class LogisticRegression {
 public:
-	LogisticRegression(double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type);
+	LogisticRegression(double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type, std::string optimizer);
 	~LogisticRegression();
 	void fit(Matrix* features, Matrix* labels);
 	Matrix* predict(Matrix* features);
@@ -18,8 +19,11 @@ private:
 	double momentum;
 	int batch_size;
 	std::string loss_type;
+	std::string optimizer;
 	Matrix* weights;
 	Matrix* bias;
+	CostFunction* cost_function;
+	MiniBatchStochasticGradientDescent* mini_batch_stochastic_gradient_descent;
 
 	bool validate_fit(Matrix* features, Matrix* labels);
 	bool validate_predict(Matrix* features);

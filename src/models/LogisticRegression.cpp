@@ -2,18 +2,40 @@
 #include "Activation.h"
 #include "Operation.h"
 #include "Log.h"
-#include <iostream>
-#include <iomanip> 
+#include "MeanSquaredError.h"
+#include "MeanAbsoluteError.h"
+#include "CostFunction.h"
+#include "MiniBatchStochasticGradientDescent.h"
+#include <iostream> 
 #include <cmath>
 
-LogisticRegression::LogisticRegression(double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type):
-	n_features(n_features), batch_size(batch_size), learning_rate(learning_rate), momentum(momentum), loss_type(loss_type) {
+LogisticRegression::LogisticRegression(double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type, std::string optimizer):
+	n_features(n_features), batch_size(batch_size), learning_rate(learning_rate), momentum(momentum), loss_type(loss_type), optimizer(optimizer) {
 		this->weights = new Matrix(this->n_features, 1, "normal");
 		this->bias = new Matrix(this->batch_size, 1, "ones");
+
+		if (loss_type == "mse") {
+			MeanSquaredError* mse = new MeanSquaredError();
+			this->cost_function = mse;
+		} else if (loss_type == "mae") {
+			MeanAbsoluteError* mae = new MeanAbsoluteError();
+			this->cost_function = mae;
+		} else if (loss_type == "mce") {
+
+		}
+
+		if (optimizer == "sgd") {
+			this->mini_batch_stochastic_gradient_descent = new MiniBatchStochasticGradientDescent(learning_rate, momentum);
+		} else if (optimizer == "adam") {
+
+		}
 }
 
 LogisticRegression::~LogisticRegression() {
 	delete[] this->weights;
+	delete[] this->bias;
+	delete[] this->cost_function;
+	delete[] this->mini_batch_stochastic_gradient_descent;
 }
 
 void LogisticRegression::fit(Matrix* features, Matrix* labels) {
@@ -21,14 +43,12 @@ void LogisticRegression::fit(Matrix* features, Matrix* labels) {
 
 	Matrix* logits = Operation::add(Operation::matmul(features, this->weights), this->bias);
 	Matrix* activated_logit = Activation::sigmoid(logits);
-	Matrix* error = CostFunction::mean_squared_error(labels, activated_logit);
+	Matrix* error = this->cost_function->get_error(labels, activated_logit);
 	double error_sum = Operation::sum_squared(error);
 
 	Log::show(Operation::round(error_sum, 4), "Current Error");
 
-	Matrix* gradients = Operation::normalize(Operation::matmul(features->transpose(), error), (double)this->batch_size);
-
-	this->update(gradients);
+	this->mini_batch_stochastic_gradient_descent->optimize(features, error, this->weights);
 }
 
 Matrix* LogisticRegression::predict(Matrix* features) {
