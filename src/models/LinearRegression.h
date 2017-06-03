@@ -36,7 +36,6 @@ private:
 	bool validate_predict(Matrix* features);
 	bool validate_save(std::string dir);
 	void serialize();
-	void update(Matrix* gradients);
 };
 
 #endif

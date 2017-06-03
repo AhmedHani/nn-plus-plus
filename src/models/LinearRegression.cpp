@@ -78,7 +78,3 @@ bool LinearRegression::validate_predict(Matrix* features) {
 void LinearRegression::serialize() {
 
 }
-
-void LinearRegression::update(Matrix* gradients) {
-	this->weights = Operation::add(this->weights, Operation::mul(gradients, -this->learning_rate));
-}

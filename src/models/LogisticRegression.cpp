@@ -81,7 +81,3 @@ bool LogisticRegression::validate_predict(Matrix* features) {
 void LogisticRegression::serialize() {
 
 }
-
-void LogisticRegression::update(Matrix* gradients) {
-	this->weights = Operation::add(this->weights, Operation::mul(gradients, -this->learning_rate));
-}
