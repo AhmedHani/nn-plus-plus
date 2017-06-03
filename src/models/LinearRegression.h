@@ -1,13 +1,13 @@
-#ifndef LOGISTIC_REGRESSION_H
-#define LOGISTIC_REGRESSION_H
+#ifndef LINEAR_REGRESSION_H
+#define LINEAR_REGRESSION_H
 
 #include "Matrix.h"
 #include "CostFunction.h"
 #include "MiniBatchStochasticGradientDescent.h"
 
-class LogisticRegression {
+class LinearRegression {
 public:
-	LogisticRegression(
+	LinearRegression(
 		double n_features, 
 		int batch_size, 
 		double learning_rate, 
@@ -15,7 +15,7 @@ public:
 		std::string loss_type, 
 		std::string optimizer);
 
-	~LogisticRegression();
+	~LinearRegression();
 	void fit(Matrix* features, Matrix* labels);
 	Matrix* predict(Matrix* features);
 	void save(std::string dir);
