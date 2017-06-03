@@ -5,11 +5,12 @@
 
 using namespace std;
 
-int main() {
+
+int main(int argc, char* argv) {
 	int epochs = 50;
 	int n_features = 2;
 	int n_labels = 1;
-	double learning_rate = 0.1;
+	double learning_rate = 0.4;
 	int batch_size = 4;
 	double momentum = 0.2;
 	std::string loss_type = "mse";
@@ -39,7 +40,7 @@ int main() {
 	Log::show(momentum, "momentum");
 	Log::show(loss_type, "loss function");
 
-	LogisticRegression* lr = new LogisticRegression(n_features, batch_size, learning_rate, momentum, loss_type);
+	LogisticRegression* lr = new LogisticRegression(n_features, batch_size, learning_rate, momentum, loss_type, "sgd");
 
 	for (int i = 0; i < epochs; i++)
 		lr->fit(input_batch, output);	
