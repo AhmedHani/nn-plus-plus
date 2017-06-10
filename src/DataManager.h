@@ -33,14 +33,15 @@ private:
 	int n_labels;
 	bool has_header;
 	std::set<int> ignore_columns;
-	int train_size;
-	int valid_size;
-	int test_size;
+	double train_size;
+	double valid_size;
+	double test_size;
 	int batch_size;
 	bool normalize;
 	bool shuffle;
 	int train_data_batch_ptr;
 	int valid_data_batch_ptr;
+	int test_data_batch_ptr;
 
 	std::map<std::string, std::vector<double>> categories_ids;
 
@@ -65,8 +66,6 @@ private:
 	std::vector<Matrix*> test_labels_batches;
 
 	void read_data();
-	void encode_category();
-	std::vector<std::string> split(std::string &text, char deli);
 };
 
 #endif

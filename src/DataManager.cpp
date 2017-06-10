@@ -1,5 +1,6 @@
 #include "DataManager.h"
 #include "Operation.h"
+#include "Util.h"
 #include <fstream>
 #include <set>
 #include <algorithm>
@@ -16,11 +17,12 @@ DataManager::DataManager(
 	int batch_size,
 	bool normalize,
 	bool shuffle):
-file_name(file_name), has_header(has_header), ignore_columns(ignore_columns), train_size(train_size), valid_size(valid_size), test_size(test_size), batch_size(batch_size), normalize(normalize), shuffle(shuffle) {
+file_name(file_name), n_features(n_features), n_labels(n_labels), has_header(has_header), ignore_columns(ignore_columns), train_size(train_size), valid_size(valid_size), test_size(test_size), batch_size(batch_size), normalize(normalize), shuffle(shuffle) {
 	this->read_data();
 
 	this->train_data_batch_ptr = 0;
 	this->valid_data_batch_ptr = 0;
+	this->test_data_batch_ptr = 0;
 }
 
 void DataManager::read_data() {
@@ -28,7 +30,7 @@ void DataManager::read_data() {
 	int current_line_index = 0;
 	std::string line;
 
-	std::vector<std::map<std::string, int>> columns_categories_ids(this->n_features);
+	std::vector<std::map<std::string, int>> columns_categories_ids(this->n_features - this->ignore_columns.size());
 	std::map<std::string, int> labels_categories_ids;
 	std::vector<std::pair<int, int>> missing_values;
 
@@ -37,7 +39,7 @@ void DataManager::read_data() {
 			continue;
 
 		std::vector<double> row;
-		std::vector<std::string> line_tokens = this->split(line, ',');
+		std::vector<std::string> line_tokens = Util::split(line, ',');
 
 		for (int i = 0; i < line_tokens.size() - 1; i++) {
 			if (this->ignore_columns.find(i) != this->ignore_columns.end())
@@ -76,14 +78,14 @@ void DataManager::read_data() {
 
 				columns_categories_ids[i] = column_category;
 			}
-
-			this->all_data_features.push_back(row);
 		}
+
+		this->all_data_features.push_back(row);
 
 		std::string label = line_tokens[line_tokens.size() - 1];
 		std::vector<double> label_vector;
 
-		if (std::stod(label) || std::stoi(label)) {
+		if (std::all_of(label.begin(), label.end(), ::isdigit)) {
 			label_vector.push_back(atof(label.c_str()));
 		} else {
 			if (labels_categories_ids.empty()) {
@@ -93,6 +95,7 @@ void DataManager::read_data() {
 				if (labels_categories_ids.find(label) != labels_categories_ids.end()) {
 					label_vector.push_back(labels_categories_ids[label]);
 
+					this->all_data_labels.push_back(label_vector);
 					continue;
 				}
 
@@ -118,7 +121,7 @@ void DataManager::read_data() {
 
 	for (int i = 0; i < this->all_data_labels.size(); i++) {
 		std::vector<double> one_hot_for_labels(max_label_value, 0.0);
-		one_hot_for_labels[this->all_data_labels[i][0]] = 1;
+		one_hot_for_labels[this->all_data_labels[i][0] - 1] = 1;
 
 		this->all_data_labels[i] = one_hot_for_labels;
 	}
@@ -196,9 +199,9 @@ void DataManager::read_data() {
 		this->all_data_features[i] = temp_data[shuffled_indices[i]];
 	}
 
-	train_size = (int)train_size * this->all_data_features.size();
-	valid_size = (int)valid_size * this->all_data_features.size();
-	test_size = (int)test_size * this->all_data_features.size();
+	this->train_size = (int)(this->train_size * (double)this->all_data_features.size());
+	this->valid_size = (int)(this->valid_size * this->all_data_features.size());
+	this->test_size = (int)(this->test_size * this->all_data_features.size());
 
 	this->train_features.assign(this->all_data_features.begin(), this->all_data_features.begin() + train_size);
 	this->train_labels.assign(this->all_data_labels.begin(), this->all_data_labels.begin() + train_size);
@@ -278,19 +281,34 @@ void DataManager::batchify() {
 	}
 }
 
-std::vector<std::string> DataManager::split(std::string &text, char deli) {
-	std::vector<std::string> tokens;
-	int start = 0;
-	int end = 0;
+std::pair<Matrix*, Matrix*> DataManager::next_train_batch() {
+	if (this->train_data_batch_ptr >= train_features_batches.size())
+		return std::pair<Matrix*, Matrix*>();
 
-	while ((end = text.find(deli, start)) != std::string::npos) {
-		tokens.push_back(text.substr(start, end - start));
-		start = end + 1;
-	}
+	return std::make_pair(
+		this->train_features_batches[this->train_data_batch_ptr],
+		this->train_labels_batches[this->train_data_batch_ptr++]
+		);
+}
 
-	tokens.push_back(text.substr(start));
+std::pair<Matrix*, Matrix*> DataManager::next_valid_batch() {
+	if (this->valid_data_batch_ptr >= valid_features_batches.size())
+		return std::pair<Matrix*, Matrix*>();
 
-	return tokens;
+	return std::make_pair(
+		this->valid_features_batches[this->valid_data_batch_ptr],
+		this->valid_labels_batches[this->valid_data_batch_ptr++]
+		);
+}
+
+std::pair<Matrix*, Matrix*> DataManager::next_test_batch() {
+	if (this->test_data_batch_ptr >= test_features_batches.size())
+		return std::pair<Matrix*, Matrix*>();
+
+	return std::make_pair(
+		this->test_features_batches[this->test_data_batch_ptr],
+		this->test_labels_batches[this->test_data_batch_ptr++]
+		);
 }
 
 
