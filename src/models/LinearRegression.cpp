@@ -5,8 +5,6 @@
 #include "MeanAbsoluteError.h"
 #include "CostFunction.h"
 #include "MiniBatchStochasticGradientDescent.h"
-#include <iostream> 
-#include <cmath>
 
 LinearRegression::LinearRegression(
 	double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type, std::string optimizer):

@@ -10,7 +10,7 @@ int main(int argc, char* argv) {
 	int epochs = 50;
 	int n_features = 2;
 	int n_labels = 1;
-	double learning_rate = 0.4;
+	double learning_rate = 0.01;
 	int batch_size = 4;
 	double momentum = 0.2;
 	std::string loss_type = "mse";
@@ -44,6 +44,7 @@ int main(int argc, char* argv) {
 
 	for (int i = 0; i < epochs; i++)
 		lr->fit(input_batch, output);	
+	
 
 	return 0;
 }

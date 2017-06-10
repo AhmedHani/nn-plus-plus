@@ -9,7 +9,7 @@ public:
 	Matrix(int n_rows, int n_columns, std::string init);
 	~Matrix();
 	Matrix(double** matrix, int n_rows, int n_columns);
-	double** get_matrix();
+	double** get_data();
 	double* operator[](int i);
 	int get_size(int axis);
 	void set_value(int i, int j, double value);

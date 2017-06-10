@@ -68,7 +68,7 @@ Matrix::~Matrix() {
 Matrix::Matrix(double** matrix, int n_rows, int n_columns): 
 	matrix(matrix), n_rows(n_rows), n_columns(n_columns) {}
 
-double** Matrix::get_matrix() {
+double** Matrix::get_data() {
 	return this->matrix;
 }
 

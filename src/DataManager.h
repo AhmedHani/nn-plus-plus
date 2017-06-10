@@ -18,7 +18,9 @@ public:
 		double train_size = 0.8, 
 		double valid_size = 0.1, 
 		double test_size = 0.1,
-		bool normalize = true);
+		int batch_size = 128,
+		bool normalize = true,
+		bool shuffle = true);
 
 	void batchify();
 	std::pair<Matrix*, Matrix*> next_train_batch();
@@ -34,7 +36,9 @@ private:
 	int train_size;
 	int valid_size;
 	int test_size;
+	int batch_size;
 	bool normalize;
+	bool shuffle;
 	int train_data_batch_ptr;
 	int valid_data_batch_ptr;
 
