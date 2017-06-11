@@ -39,6 +39,8 @@ private:
 	CostFunction* cost_function;
 	MiniBatchStochasticGradientDescent* mini_batch_stochastic_gradient_descent;
 
+	Matrix* apply_hidden_activation(Matrix* linear, std::string activation);
+	Matrix* apply_output_activation(Matrix* linear);
 	bool validate_fit(Matrix* features, Matrix* labels);
 	bool validate_predict(Matrix* features);
 	bool validate_save(std::string dir);

@@ -37,17 +37,21 @@ double Activation::tanh(double value) {
 Matrix* Activation::softmax(Matrix* a) {
 	Matrix* result = new Matrix(a->get_size(0), 1, "zeros");
 
-	double sum = 0.0;
+	std::vector<double> sums;
 
 	for (size_t i = 0; i < a->get_size(0); i++) {
+		double sum = 0.0;
+
 		for (size_t j = 0; j < a->get_size(1); j++) {
 			sum += exp(a->get_value(i, j));
 		}
+
+		sums.push_back(sum);
 	}
 
 	for (size_t i = 0; i < result->get_size(0); i++) {
 		for (size_t j = 0; j < result->get_size(1); j++) {
-			result->set_value(i, j, exp(a->get_value(i, j)) / sum);
+			result->set_value(i, j, exp(a->get_value(i, j)) / sums[i]);
 		}
 	}
 
