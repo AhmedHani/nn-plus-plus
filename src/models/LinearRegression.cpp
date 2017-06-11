@@ -7,26 +7,31 @@
 #include "MiniBatchStochasticGradientDescent.h"
 
 LinearRegression::LinearRegression(
-	double n_features, int batch_size, double learning_rate, double momentum, std::string loss_type, std::string optimizer):
-	n_features(n_features), batch_size(batch_size), learning_rate(learning_rate), momentum(momentum), loss_type(loss_type), optimizer(optimizer) {
-		this->weights = new Matrix(this->n_features, 1, "normal");
-		this->bias = new Matrix(this->batch_size, 1, "ones");
+	double n_features, 
+	int batch_size, 
+	double learning_rate, 
+	double momentum, 
+	std::string loss_type, 
+	std::string optimizer):
+n_features(n_features), batch_size(batch_size), learning_rate(learning_rate), momentum(momentum), loss_type(loss_type), optimizer(optimizer) {
+	this->weights = new Matrix(this->n_features, 1, "normal");
+	this->bias = new Matrix(this->batch_size, 1, "ones");
 
-		if (loss_type == "mse") {
-			MeanSquaredError* mse = new MeanSquaredError();
-			this->cost_function = mse;
-		} else if (loss_type == "mae") {
-			MeanAbsoluteError* mae = new MeanAbsoluteError();
-			this->cost_function = mae;
-		} else if (loss_type == "mce") {
+	if (loss_type == "mse") {
+		MeanSquaredError* mse = new MeanSquaredError();
+		this->cost_function = mse;
+	} else if (loss_type == "mae") {
+		MeanAbsoluteError* mae = new MeanAbsoluteError();
+		this->cost_function = mae;
+	} else if (loss_type == "mce") {
 
-		}
+	}
 
-		if (optimizer == "sgd") {
-			this->mini_batch_stochastic_gradient_descent = new MiniBatchStochasticGradientDescent(learning_rate, momentum);
-		} else if (optimizer == "adam") {
+	if (optimizer == "sgd") {
+		this->mini_batch_stochastic_gradient_descent = new MiniBatchStochasticGradientDescent(learning_rate, momentum);
+	} else if (optimizer == "adam") {
 
-		}
+	}
 }
 
 LinearRegression::~LinearRegression() {

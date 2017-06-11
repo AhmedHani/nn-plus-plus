@@ -5,6 +5,7 @@
 #include <set>
 #include <algorithm>
 
+
 DataManager::DataManager(
 	std::string file_name,
 	int n_features,
@@ -310,6 +311,3 @@ std::pair<Matrix*, Matrix*> DataManager::next_test_batch() {
 		this->test_labels_batches[this->test_data_batch_ptr++]
 		);
 }
-
-
-
